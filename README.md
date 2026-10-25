@@ -58,5 +58,10 @@ environment, empty-release audit, and frozen-application smoke tests.
 Browser module tests in `tests/*.cjs` use Node.js and Playwright. Application
 tests use synthetic fixtures and temporary databases.
 
-Third-party library and font licenses are preserved beside their files and in
-the portable release's `LICENSES` folder.
+## License
+
+The Archive's original application code and documentation are released under the
+[Unlicense](LICENSE). Third-party libraries and fonts retain their own licenses
+and notices, preserved beside their files and in the portable release's `LICENSES`
+folder. Imported conversations, attachments, and other user data are not covered
+by the application's license.

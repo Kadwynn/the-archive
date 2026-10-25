@@ -112,6 +112,7 @@ class BuildPrivacyTests(unittest.TestCase):
             docs.mkdir()
             (docs / "START HERE.txt").write_text("Open README.txt for full instructions.", encoding="utf-8")
             (docs / "README.txt").write_text("New importing, searching, and export guide.", encoding="utf-8")
+            (root / "LICENSE").write_text("Standard application license fixture.\n", encoding="utf-8")
             with patch.object(builder, "ROOT", root), patch.object(builder, "DOCUMENTATION_ROOT", docs), \
                     patch.object(builder, "inspect_frozen_code", return_value=1):
                 report = builder.refresh_documentation(source)
@@ -124,12 +125,46 @@ class BuildPrivacyTests(unittest.TestCase):
                     self.assertEqual(archive.read("The Archive/" + name), old_files[name])
                 self.assertEqual(archive.read("The Archive/README.txt"), (docs / "README.txt").read_bytes())
                 self.assertEqual(archive.read("The Archive/START HERE.txt"), (docs / "START HERE.txt").read_bytes())
+                self.assertEqual(archive.read("The Archive/LICENSE"), (root / "LICENSE").read_bytes())
                 manifest = json.loads(archive.read("The Archive/BUNDLE-MANIFEST.json"))
                 self.assertEqual(manifest["build_id"], "original-test-build")
                 self.assertEqual(manifest["source_inputs"], [{"path": "portable.py", "sha256": "source-hash"}])
                 self.assertEqual(manifest["documentation_revision"]["based_on_zip_sha256"], builder.digest(original_bytes))
                 self.assertTrue(manifest["documentation_revision"]["unchanged_runtime"])
+                self.assertEqual(manifest["application_license"], {"path": "LICENSE", "spdx": "Unlicense"})
                 self.assertEqual(manifest["version"], "1.0.0")
+
+    def test_application_license_is_copied_from_root_and_third_party_notices_are_preserved(self):
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            docs = root / "docs"
+            docs.mkdir()
+            bundle = root / "bundle"
+            bundle.mkdir()
+            for name in ("START HERE.txt", "README.txt"):
+                (docs / name).write_bytes(b"recipient instructions\n")
+            license_text = b"Application license bytes stay unchanged.\n"
+            (root / "LICENSE").write_bytes(license_text)
+            third_party = bundle / "LICENSES" / "third-party.txt"
+            third_party.parent.mkdir()
+            third_party.write_bytes(b"Original third-party terms\n")
+            with patch.object(builder, "ROOT", root), patch.object(builder, "DOCUMENTATION_ROOT", docs):
+                builder.copy_documentation(bundle)
+            self.assertEqual((bundle / "LICENSE").read_bytes(), license_text)
+            self.assertEqual(third_party.read_bytes(), b"Original third-party terms\n")
+
+    def test_missing_application_license_refuses_a_new_bundle(self):
+        with TemporaryDirectory() as directory:
+            root = Path(directory)
+            docs = root / "docs"
+            docs.mkdir()
+            bundle = root / "bundle"
+            bundle.mkdir()
+            for name in ("START HERE.txt", "README.txt"):
+                (docs / name).write_bytes(b"instructions")
+            with patch.object(builder, "ROOT", root), patch.object(builder, "DOCUMENTATION_ROOT", docs):
+                with self.assertRaises(FileNotFoundError):
+                    builder.copy_documentation(bundle)
 
     def test_documentation_refresh_refuses_an_unclean_input(self):
         with TemporaryDirectory() as directory:

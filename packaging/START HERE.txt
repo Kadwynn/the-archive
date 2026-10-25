@@ -57,3 +57,7 @@ or a managed computer may apply its normal checks to an unfamiliar download.
 Only run a copy you obtained from a source you trust.
 
 Third-party software notices and licenses are in the LICENSES folder.
+
+The Archive's original code and documentation use the Unlicense; see LICENSE.
+Bundled libraries and fonts keep their existing licenses. Imported chats and
+other user data are not covered by the application license.

@@ -29,7 +29,11 @@ defaults or developer paths that would otherwise be invisible in a plain ZIP sca
 Recipient documentation is included in every ZIP: `START HERE.txt` gives the
 quick start, while `README.txt` explains importing, searching, reading, tags,
 exports, backups, updates, and known limitations. Edit their copies in this
-`packaging` directory before building.
+`packaging` directory before building. The standard application `LICENSE` is
+copied unchanged from the repository root into the top of the ZIP. It covers
+the original application code and documentation under the Unlicense. Bundled
+third-party components retain their existing license files and notices;
+imported conversations and other user data are not covered by the app license.
 
 Re-audit a ZIP without building:
 
@@ -37,14 +41,15 @@ Re-audit a ZIP without building:
 .\.portable-build\tools\Scripts\python.exe packaging\build_portable.py --audit "path\to\The Archive - Windows Portable.zip"
 ```
 
-To update only those two recipient documents in a previously audited ZIP:
+To update the two recipient guides and application license in a previously
+audited ZIP:
 
 ```powershell
 .\.portable-build\tools\Scripts\python.exe packaging\build_portable.py --refresh-docs "path\to\The Archive - Windows Portable.zip"
 ```
 
 This creates a new timestamped release and leaves the input ZIP intact. It checks
-that every executable, library, license, and interface asset keeps its original
+that every executable, library, third-party license, and interface asset keeps its original
 hash, records a documentation revision in the manifest, then repeats the full
 ZIP and compressed-code privacy audit. The app version remains the same because
 the executable has not changed.

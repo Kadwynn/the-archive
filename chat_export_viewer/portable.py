@@ -24,7 +24,7 @@ from flask import Response, g, jsonify, redirect, request
 from .server import create_app
 
 APP_ID = "the-archive-portable"
-VERSION = "1.0.0"
+VERSION = "1.0.1"
 DEFAULT_PORT = 8767
 
 

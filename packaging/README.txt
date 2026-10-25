@@ -276,4 +276,12 @@ re-zip that populated folder for other people.
 This edition is unsigned. Windows and managed computers apply their normal
 checks to unfamiliar apps. Third-party licenses are in the LICENSES folder.
 
+LICENSING
+---------
+The Archive's original application code and documentation are released under
+the Unlicense. The standard license text is in LICENSE beside the executable.
+Bundled libraries and fonts retain their own licenses and notices. Imported
+conversations, attachments, and other user data are not covered by the app's
+license.
+
 External exporter links and instructions checked on 25 October 2026.

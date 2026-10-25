@@ -22,7 +22,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 APP_NAME = "The Archive"
-DOCUMENTATION = ("START HERE.txt", "README.txt")
+DOCUMENTATION = ("START HERE.txt", "README.txt", "LICENSE")
 DOCUMENTATION_ROOT = Path(__file__).resolve().parent
 APP_MODULES = (
     "__init__.py", "database.py", "exporting.py", "ingest.py", "server.py",
@@ -130,7 +130,8 @@ def file_manifest(bundle: Path) -> list[dict]:
 
 def copy_documentation(bundle: Path) -> None:
     for name in DOCUMENTATION:
-        source = safe_file(DOCUMENTATION_ROOT / name, DOCUMENTATION_ROOT)
+        source_root = ROOT if name == "LICENSE" else DOCUMENTATION_ROOT
+        source = safe_file(source_root / name, source_root)
         shutil.copyfile(source, bundle / name)
 
 
@@ -138,6 +139,7 @@ def manifest_for(bundle: Path, source_records: list[dict[str, str]], identity: s
     return {
         "application": APP_NAME, "version": app_version, "platform": "windows-x64",
         "build_id": identity, "empty_archive": True,
+        "application_license": {"path": "LICENSE", "spdx": "Unlicense"},
         "python": platform.python_version(), "pyinstaller": version("PyInstaller"),
         "dependencies": {name: version(name) for name in RUNTIME_PACKAGES},
         "source_inputs": source_records, "files": file_manifest(bundle),
@@ -214,6 +216,7 @@ def inspect_zip(path: Path) -> dict:
             "uncompressed_bytes": sum(info.file_size for info in archive.infolist()),
             "zip_bytes": path.stat().st_size, "zip_sha256": digest(path.read_bytes()),
             "compiled_code_objects_checked": code_objects, "personal_defaults_or_build_paths_absent": True,
+            "application_license_included": prefix + "LICENSE" in names,
         }
 
 
@@ -263,7 +266,8 @@ def refresh_documentation(zip_path: Path) -> dict:
         "unchanged_runtime": True,
         "files": [new_files[name] for name in DOCUMENTATION],
     }
-    manifest = {**original_manifest, "files": files, "documentation_revision": revision}
+    manifest = {**original_manifest, "files": files, "documentation_revision": revision,
+                "application_license": {"path": "LICENSE", "spdx": "Unlicense"}}
     (bundle / "BUNDLE-MANIFEST.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     release = ROOT / "release" / f"{app_version}-windows-x64-{identity}"
     release.mkdir(parents=True)
