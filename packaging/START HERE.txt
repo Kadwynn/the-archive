@@ -1,0 +1,59 @@
+THE ARCHIVE - PORTABLE WINDOWS EDITION
+
+1. Right-click the ZIP and choose Extract All. Open the extracted folder.
+2. Double-click The Archive.exe. Your browser will open the app.
+3. Choose Add conversations, select your own ChatGPT JSON file, and choose
+   Add to archive. Full exports and compatible single-conversation JSON files
+   can both be imported. Different export tools may include different fields.
+
+You do not need to install Python, use a terminal, sign in, or make an account.
+The app works locally on your computer, including when you are offline.
+
+For full importing, exporting, searching, and tag instructions, open README.txt.
+
+READING AND SEARCHING
+
+Use the search on the left to find a conversation. Once a chat is open, Ctrl+F
+searches its message text. Enter goes to the next result; Shift+Enter goes back.
+The View menu switches between formatted Markdown and the original text.
+
+STOPPING AND REOPENING
+
+Use Quit app in the app to stop it. Closing the browser tab alone does not stop
+the local app. Double-click The Archive.exe whenever you want to open it again.
+If the app is already running, another double-click opens it again without
+starting a second copy.
+
+YOUR FILES
+
+This download contains no conversations. The app creates a data folder beside
+The Archive.exe the first time it opens. Your imported chats and tags live in
+data\master_export.db. Keep the whole data folder when backing up or moving
+your archive. Quit the app before copying or moving its folder.
+
+Choose a folder where you can save files, such as Documents or a USB drive.
+Keep The Archive.exe and the _internal folder together. Do not run it from
+inside the ZIP, Program Files, or a read-only drive.
+
+SHARING AND UPDATES
+
+Share the original ZIP if you want to give someone an empty copy. Your extracted
+folder contains your private chats after you import them. Do not re-zip that
+folder for other people.
+
+For an update, quit the app, extract the new version to a new folder, and copy
+your old data folder into it before opening the new version. Keep the old folder
+as a backup until you have checked the new version.
+
+TROUBLESHOOTING
+
+If your browser does not open, wait a moment and double-click The Archive.exe
+again. Startup problems are shown in a message box. If a data\portable.log file
+is present, it may contain technical details useful when asking for help. Review
+it before sharing it because errors can include local file paths.
+
+This edition is for 64-bit Windows 10 or 11. It has not been digitally signed. Windows
+or a managed computer may apply its normal checks to an unfamiliar download.
+Only run a copy you obtained from a source you trust.
+
+Third-party software notices and licenses are in the LICENSES folder.

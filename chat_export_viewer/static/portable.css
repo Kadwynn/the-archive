@@ -1,0 +1,33 @@
+#quit-archive {
+  min-height: 36px;
+  padding-inline: 10px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.portable-closed {
+  max-width: 580px;
+  margin: 20vh auto;
+  padding: 28px;
+  color: var(--ink);
+}
+
+.portable-closed h1 {
+  font-family: "Newsreader", Georgia, serif;
+  font-size: 2.2rem;
+  font-weight: 600;
+}
+
+.portable-closed p {
+  color: var(--ink-soft);
+  line-height: 1.7;
+}
+
+@media (max-width: 1180px) {
+  .topbar-actions { gap: 8px; }
+  .topbar-actions .stats-item:last-child { display: none; }
+}
+
+@media (max-width: 620px) {
+  .topbar-actions { flex-wrap: wrap; max-width: 90px; }
+}

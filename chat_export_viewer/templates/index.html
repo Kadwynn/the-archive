@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>The Archive · Chat Export Viewer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='fonts/fonts.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='markdown.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='reader.css') }}" />
+    <script defer src="{{ url_for('static', filename='vendor/marked.umd.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='vendor/purify.min.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='markdown.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='chat-find.js') }}"></script>
+    <script defer src="{{ url_for('static', filename='app.js') }}"></script>
+    {% if config.get('PORTABLE_MODE') %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='portable.css') }}" />
+    <script defer src="{{ url_for('static', filename='portable-ui.js') }}"></script>
+    {% endif %}
+  </head>
+  <body>
+    <div class="atmosphere" aria-hidden="true">
+      <span></span>
+    </div>
+
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true"><span>A</span></div>
+          <div class="brand-copy">
+            <p class="eyebrow">Personal transcript archive</p>
+            <h1>The Archive</h1>
+            <p class="tagline">Conversations, fragments, and ghosts—kept searchable.</p>
+          </div>
+        </div>
+
+        <details class="import-drawer" id="import-drawer">
+          <summary>
+            <span class="import-symbol" aria-hidden="true">＋</span>
+            <span class="import-summary-copy">
+              <strong>Add conversations</strong>
+            </span>
+          </summary>
+          <div class="import-row">
+            <form id="import-file-form" class="import-form import-form-primary" enctype="multipart/form-data">
+              <div>
+                <span class="form-kicker">Choose a file</span>
+                <label for="import-file">Full export or single conversation</label>
+              </div>
+              <div class="import-controls">
+                <input id="import-file" type="file" accept=".json,application/json" />
+                <button type="submit">Add to archive</button>
+              </div>
+            </form>
+
+            <form id="import-path-form" class="import-form">
+              <div>
+                <span class="form-kicker">Advanced</span>
+                <label for="import-path">Import from a local path</label>
+              </div>
+              <div class="import-controls">
+                <input id="import-path" type="text" placeholder="D:\data\conversations.json" />
+                <button type="submit" class="button-secondary">Import path</button>
+              </div>
+            </form>
+          </div>
+        </details>
+
+        <div class="topbar-actions">
+          <div class="stats" id="stats" aria-live="polite">Loading archive…</div>
+          <button id="theme-toggle" type="button" class="theme-toggle">
+            <span class="theme-icon" aria-hidden="true">◐</span>
+            <span id="theme-label">Dark</span>
+          </button>
+          {% if config.get('PORTABLE_MODE') %}
+          <button id="quit-archive" type="button" class="button-secondary">Quit app</button>
+          {% endif %}
+        </div>
+      </header>
+
+      <div id="import-status" class="status-bar" role="status" aria-live="polite"></div>
+
+      <section class="workspace">
+        <aside class="archive-rail" aria-label="Conversation archive">
+          <header class="rail-header">
+            <div>
+              <p class="eyebrow">Find a thread</p>
+              <h2>Conversations</h2>
+            </div>
+            <span id="list-meta">Loading…</span>
+          </header>
+
+          <form id="search-form" class="search-form" role="search">
+            <label class="visually-hidden" for="search-input">Search conversations</label>
+            <div class="search-box">
+              <span class="search-glyph" aria-hidden="true">⌕</span>
+              <input
+                id="search-input"
+                type="search"
+                placeholder="Search the archive…"
+                autocomplete="off"
+              />
+              <button type="submit">Search</button>
+            </div>
+
+            <div class="search-options">
+              <label for="search-mode">
+                <span>Match by</span>
+                <select id="search-mode">
+                  <option value="normal">Best match</option>
+                  <option value="fuzzy">Typo tolerant</option>
+                  <option value="title">Titles only</option>
+                  <option value="tag">Tags only</option>
+                </select>
+              </label>
+            </div>
+
+            <details class="activity-filter">
+              <summary>
+                <span>Activity window</span>
+                <small>Filter by a day or range</small>
+              </summary>
+              <div class="activity-filter-body">
+                <div class="activity-filter-actions">
+                  <span>Through is inclusive.</span>
+                  <button id="clear-activity-dates" type="button" class="button-quiet" disabled>Clear</button>
+                </div>
+                <div class="activity-filter-fields">
+                  <label for="activity-from">
+                    <span>From</span>
+                    <input id="activity-from" type="date" />
+                  </label>
+                  <label for="activity-through">
+                    <span>Through <small>optional</small></span>
+                    <input id="activity-through" type="date" disabled />
+                  </label>
+                </div>
+              </div>
+            </details>
+          </form>
+
+          <div id="conversation-list" class="conversation-list" aria-live="polite"></div>
+          <div class="rail-footer">
+            <button id="load-more" class="load-more button-secondary" type="button">Load more</button>
+          </div>
+        </aside>
+
+        <main class="reader">
+          <section id="detail-empty" class="detail-empty">
+            <div class="empty-mark" aria-hidden="true"><span>✦</span></div>
+            <p class="eyebrow">Reading pane</p>
+            <h2>Choose a conversation.</h2>
+            <p>Its messages, branches, and history will open here.</p>
+            <div class="empty-rule" aria-hidden="true"><span></span><i>✦</i><span></span></div>
+          </section>
+
+          <section id="detail-view" class="detail-view hidden">
+            <header class="detail-header">
+              <div class="detail-heading">
+                <p class="eyebrow">Selected conversation</p>
+                <h2 id="detail-title"></h2>
+                <details class="conversation-info">
+                  <summary>Conversation details</summary>
+                  <div id="detail-meta" class="detail-meta"></div>
+                </details>
+              </div>
+
+              <div class="detail-actions">
+                <label class="scope-control" for="path-mode">
+                  <span>Messages</span>
+                  <select id="path-mode">
+                    <option value="current">Current branch</option>
+                    <option value="all">All branches</option>
+                  </select>
+                </label>
+                <div class="export-actions" aria-label="Export conversation">
+                  <button id="export-chat-only" type="button">Readable .md</button>
+                  <button id="export-chat-split" type="button" class="button-secondary">Split .zip</button>
+                  <button id="export-conversation" type="button" class="button-secondary">Original .json</button>
+                </div>
+              </div>
+              <div class="reader-toolbar">
+                <label class="reading-format-control" for="reading-format">
+                  <span>View</span>
+                  <select id="reading-format">
+                    <option value="formatted">Formatted</option>
+                    <option value="original">Original text</option>
+                  </select>
+                </label>
+                <div class="chat-find" role="search" aria-label="Find in this chat">
+                  <label class="visually-hidden" for="chat-find-input">Find in this chat</label>
+                  <input id="chat-find-input" type="search" placeholder="Find in this chat…" title="Find in this chat (Ctrl+F)" autocomplete="off" aria-describedby="chat-find-help" />
+                  <span id="chat-find-status" class="chat-find-status" role="status" aria-live="polite" aria-atomic="true"></span>
+                  <button id="chat-find-previous" type="button" class="button-quiet" aria-label="Previous match" title="Previous match (Shift+Enter)" disabled>↑</button>
+                  <button id="chat-find-next" type="button" class="button-quiet" aria-label="Next match" title="Next match (Enter)" disabled>↓</button>
+                  <button id="chat-find-clear" type="button" class="button-quiet" aria-label="Clear chat search" title="Clear chat search (Escape)" disabled>×</button>
+                  <span id="chat-find-help" class="visually-hidden">Searches message text in the selected branch view, excluding metadata and raw JSON. Ctrl+F focuses this field. Enter goes to the next match; Shift+Enter goes to the previous match. Escape clears the search.</span>
+                </div>
+              </div>
+            </header>
+
+            <section class="conversation-tags-panel" aria-labelledby="conversation-tags-heading">
+              <div class="conversation-tags-heading">
+                <div>
+                  <p id="conversation-tags-heading">Tags</p>
+                  <p class="conversation-tags-hint">Your own labels for finding this conversation later.</p>
+                </div>
+                <button
+                  id="edit-tags"
+                  type="button"
+                  class="button-secondary"
+                  aria-expanded="false"
+                  aria-controls="tag-editor"
+                >Add tags</button>
+              </div>
+
+              <div id="detail-tags" class="detail-tags" aria-label="Conversation tags"></div>
+
+              <form id="tag-editor" class="tag-editor hidden" novalidate>
+                <label for="tag-input">Edit tags</label>
+                <textarea
+                  id="tag-input"
+                  rows="2"
+                  autocomplete="off"
+                  aria-describedby="tag-help tag-status"
+                  placeholder="test prompt, GPT-5, no memory"
+                ></textarea>
+                <p id="tag-help" class="tag-help">
+                  Separate tags with commas or new lines. Up to 30 tags, 80 characters each.
+                  Press Enter to save or Shift+Enter for a new line.
+                </p>
+                <div class="tag-editor-actions">
+                  <button id="save-tags" type="submit">Save tags</button>
+                  <button id="cancel-tags" type="button" class="button-quiet">Cancel</button>
+                </div>
+              </form>
+
+              <p id="tag-status" class="tag-status" role="status" aria-live="polite" aria-atomic="true"></p>
+            </section>
+
+            <section id="messages" class="messages" aria-label="Conversation messages"></section>
+
+            <details class="raw-panel">
+              <summary>
+                <span>Technical details</span>
+                <small>Raw conversation JSON</small>
+              </summary>
+              <pre id="raw-conversation" tabindex="0"></pre>
+            </details>
+          </section>
+        </main>
+      </section>
+    </div>
+  </body>
+</html>

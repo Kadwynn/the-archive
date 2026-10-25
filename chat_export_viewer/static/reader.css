@@ -1,0 +1,101 @@
+.detail-header {
+  flex-wrap: wrap;
+  row-gap: 14px;
+}
+
+.reader-toolbar {
+  display: flex;
+  flex: 1 0 100%;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-width: 0;
+  gap: 12px;
+}
+
+.reading-format-control {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.73rem;
+}
+
+.reading-format-control select {
+  width: 125px;
+  min-height: 34px;
+  font-size: 0.75rem;
+}
+
+.chat-find {
+  display: grid;
+  grid-template-columns: minmax(90px, 240px) auto repeat(3, 30px);
+  align-items: center;
+  min-width: 0;
+  gap: 4px;
+}
+
+.chat-find input {
+  min-width: 0;
+  min-height: 34px;
+  font-size: 0.78rem;
+}
+
+.chat-find input::placeholder {
+  color: var(--muted);
+}
+
+.chat-find input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.chat-find-status {
+  min-width: 4.8em;
+  padding-inline: 3px;
+  color: var(--muted);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.65rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.chat-find button {
+  min-width: 0;
+  min-height: 32px;
+  padding: 0;
+  font-size: 1rem;
+}
+
+.message-content mark.chat-find-match {
+  border-radius: 2px;
+  padding: 0;
+  color: var(--mark-ink);
+  background: var(--mark-bg);
+  box-decoration-break: clone;
+  scroll-margin-block: 240px 40px;
+}
+
+.message-content mark.chat-find-match.is-current {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+  color: #261b10;
+  background: var(--brass-pale);
+}
+
+.message-content code mark.chat-find-match {
+  font: inherit;
+}
+
+@media (max-width: 620px) {
+  .reader-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 9px;
+  }
+
+  .chat-find {
+    grid-template-columns: minmax(0, 1fr) auto repeat(3, 28px);
+  }
+}

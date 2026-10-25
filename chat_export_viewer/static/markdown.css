@@ -1,0 +1,163 @@
+.message-content.is-formatted {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.message-content.is-formatted > :first-child {
+  margin-top: 0;
+}
+
+.message-content.is-formatted > :last-child {
+  margin-bottom: 0;
+}
+
+.message-content.is-formatted p,
+.message-content.is-formatted ul,
+.message-content.is-formatted ol,
+.message-content.is-formatted blockquote,
+.message-content.is-formatted pre,
+.message-content.is-formatted .md-table {
+  margin-block: 0 0.9em;
+}
+
+.message-content.is-formatted h1,
+.message-content.is-formatted h2,
+.message-content.is-formatted h3,
+.message-content.is-formatted h4,
+.message-content.is-formatted h5,
+.message-content.is-formatted h6 {
+  margin: 1.3em 0 0.55em;
+  color: var(--ink);
+  font-family: "Source Sans 3", "Segoe UI", sans-serif;
+  font-weight: 650;
+  line-height: 1.3;
+  letter-spacing: normal;
+}
+
+.message-content.is-formatted h1 { font-size: 1.45em; }
+.message-content.is-formatted h2 { font-size: 1.25em; }
+.message-content.is-formatted h3 { font-size: 1.1em; }
+.message-content.is-formatted h4,
+.message-content.is-formatted h5,
+.message-content.is-formatted h6 { font-size: 1em; }
+
+.message-content.is-formatted strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.message-content.is-formatted ul,
+.message-content.is-formatted ol {
+  padding-left: 1.5em;
+}
+
+.message-content.is-formatted li {
+  padding-left: 0.15em;
+}
+
+.message-content.is-formatted li + li {
+  margin-top: 0.25em;
+}
+
+.message-content.is-formatted li > ul,
+.message-content.is-formatted li > ol {
+  margin-block: 0.25em 0;
+}
+
+.message-content.is-formatted li > p {
+  margin-bottom: 0.4em;
+}
+
+.message-content.is-formatted blockquote {
+  margin-left: 0;
+  border-left: 3px solid var(--brass);
+  padding: 0.15em 0 0.15em 1em;
+  color: var(--ink-soft);
+}
+
+.message-content.is-formatted blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.message-content.is-formatted a {
+  color: color-mix(in srgb, var(--brass) 75%, var(--ink));
+  text-decoration: underline;
+  text-underline-offset: 0.18em;
+}
+
+.message-content.is-formatted a:hover {
+  color: var(--ink);
+}
+
+.message-content.is-formatted code {
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0.1em 0.3em;
+  background: var(--garnet-wash);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 0.82em;
+  white-space: break-spaces;
+}
+
+.message-content.is-formatted pre {
+  max-width: 100%;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  background: var(--field);
+  line-height: 1.55;
+  white-space: pre;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.message-content.is-formatted pre code {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--ink-soft);
+  white-space: pre;
+}
+
+.message-content.is-formatted hr {
+  margin: 1.3em 0;
+  border: 0;
+  border-top: 1px solid var(--line-strong);
+}
+
+.message-content.is-formatted .md-table {
+  max-width: 100%;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-md);
+}
+
+.message-content.is-formatted table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  line-height: 1.5;
+}
+
+.message-content.is-formatted th,
+.message-content.is-formatted td {
+  min-width: 90px;
+  border-bottom: 1px solid var(--line);
+  padding: 0.6em 0.8em;
+  text-align: left;
+  vertical-align: top;
+}
+
+.message-content.is-formatted th {
+  color: var(--ink);
+  background: var(--garnet-wash);
+  font-weight: 650;
+}
+
+.message-content.is-formatted tr:last-child td {
+  border-bottom: 0;
+}
+
+.message-content.is-formatted [align="center"] { text-align: center; }
+.message-content.is-formatted [align="right"] { text-align: right; }

@@ -1,0 +1,19 @@
+# Imported history and generated files
+data/
+*.db
+*.db-*
+*.sqlite*
+*.json
+*.log
+.venv/
+.portable-build/
+release/
+artifacts/
+__pycache__/
+*.pyc
+.codex/
+.agents/
+.env
+.env.*
+!chat_export_viewer/static/vendor/manifest.json
+!chat_export_viewer/static/fonts/manifest.json
