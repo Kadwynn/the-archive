@@ -284,7 +284,7 @@ def refresh_documentation(zip_path: Path) -> dict:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--version", default="1.0.0")
+    parser.add_argument("--version", default="1.0.1")
     parser.add_argument("--audit", type=Path, help="Verify an existing release ZIP without rebuilding")
     parser.add_argument("--refresh-docs", type=Path, help="Add current recipient documentation to an audited ZIP")
     args = parser.parse_args()
